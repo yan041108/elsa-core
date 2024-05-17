@@ -10,6 +10,8 @@ using Elsa.ServerAndStudio.Web.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Proto.Persistence.Sqlite;
+using Proto.Persistence.SqlServer;
+using SQLite;
 
 const bool useMassTransit = true;
 const bool useProtoActor = false;
@@ -18,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseStaticWebAssets();
 var services = builder.Services;
 var configuration = builder.Configuration;
-var sqliteConnectionString = configuration.GetConnectionString("Sqlite")!;
+var sqlServerConnectionString = configuration.GetConnectionString("SqlServer")!;
 var rabbitMqConnectionString = configuration.GetConnectionString("RabbitMq")!;
 var azureServiceBusConnectionString = configuration.GetConnectionString("AzureServiceBus")!;
 var identitySection = configuration.GetSection("Identity");
@@ -44,8 +46,13 @@ services
                 identity.UseConfigurationBasedUserProvider(options => identitySection.Bind(options));
                 identity.UseConfigurationBasedApplicationProvider(options => identitySection.Bind(options));
                 identity.UseConfigurationBasedRoleProvider(options => identitySection.Bind(options));
+
+                identity.UseAdminUserProvider();//dyg add
             })
-            .UseDefaultAuthentication()
+            
+            .UseFluentStorageProvider()//dyg add  Add the Fluent Storage workflow definition provider.  Fluent 存储提供程序将在文件夹中查找工作流定义
+
+            .UseDefaultAuthentication(auth => auth.UseAdminApiKey())//dyg update   old .UseDefaultAuthentication()
             .UseApplicationCluster(x => x.HeartbeatOptions = settings => heartbeatSection.Bind(settings))
             .UseWorkflowManagement(management =>
             {
@@ -54,11 +61,11 @@ services
                     management.UseMassTransitDispatcher();
                 }
 
-                management.UseEntityFrameworkCore(ef => ef.UseSqlite(sqliteConnectionString));
+                management.UseEntityFrameworkCore(ef => ef.UseSqlServer(sqlServerConnectionString));
             })
             .UseWorkflowRuntime(runtime =>
             {
-                runtime.UseEntityFrameworkCore(ef => ef.UseSqlite(sqliteConnectionString));
+                runtime.UseEntityFrameworkCore(ef => ef.UseSqlite(sqlServerConnectionString));
                 
                 if (useMassTransit)
                 {
@@ -69,7 +76,8 @@ services
                 {
                     runtime.UseProtoActor(proto => proto.PersistenceProvider = _ =>
                     {
-                        return new SqliteProvider(new SqliteConnectionStringBuilder(sqliteConnectionString));
+                        //return new SqlServerProvider(new SqliteConnectionStringBuilder(sqliteConnectionString));
+                        return new SqlServerProvider(sqlServerConnectionString);
                     });
                 }
 
@@ -126,7 +134,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();  //dyg 删
 app.UseBlazorFrameworkFiles();
 app.MapHealthChecks("/health");
 app.UseRouting();
