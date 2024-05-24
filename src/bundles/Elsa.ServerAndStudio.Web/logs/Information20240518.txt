@@ -1,0 +1,15 @@
+2024-05-18 12:10:50 [INFORMATION] Configured endpoint elsa-workflow-definition-updates, Consumer: Elsa.MassTransit.Consumers.WorkflowDefinitionEventsConsumer
+2024-05-18 12:10:50 [INFORMATION] Configured endpoint elsa-dispatch-cancel-workflow, Consumer: Elsa.MassTransit.Consumers.DispatchCancelWorkflowsRequestConsumer
+2024-05-18 12:10:50 [INFORMATION] Configured endpoint elsa-dispatch-workflow-request, Consumer: Elsa.MassTransit.Consumers.DispatchWorkflowRequestConsumer
+2024-05-18 12:10:50 [INFORMATION] Configured endpoint elsa-dispatch-workflow-request-low, Consumer: Elsa.MassTransit.Consumers.DispatchWorkflowRequestConsumer
+2024-05-18 12:10:50 [INFORMATION] Configured endpoint elsa-dispatch-workflow-request-medium, Consumer: Elsa.MassTransit.Consumers.DispatchWorkflowRequestConsumer
+2024-05-18 12:10:50 [INFORMATION] Configured endpoint elsa-dispatch-workflow-request-high, Consumer: Elsa.MassTransit.Consumers.DispatchWorkflowRequestConsumer
+2024-05-18 12:10:51 [INFORMATION] Registered 72 endpoints in 1,537 milliseconds.
+2024-05-18 12:10:53 [WARNING] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2024-05-18 12:10:53 [WARNING] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2024-05-18 12:10:53 [INFORMATION] Entering expired workflow inbox messages cleanup service loop
+2024-05-18 12:10:53 [WARNING] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2024-05-18 12:10:53 [WARNING] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2024-05-18 12:10:53 [INFORMATION] Cleaned up 0 expired messages
+2024-05-18 12:10:53 [INFORMATION] Expired messages cleanup service is going to sleep for 10 minutes
+2024-05-18 12:10:53 [INFORMATION] Bus started: "loopback://localhost/"

@@ -38,6 +38,9 @@
         <PackageReference Include="Elsa.Studio" />
         <PackageReference Include="Elsa.Studio.Login.BlazorWasm" />
         <PackageReference Include="Proto.Persistence.SqlServer" />
+        <PackageReference Include="Serilog" />
+        <PackageReference Include="Serilog.AspNetCore" />
+        <PackageReference Include="Serilog.Sinks.File" />
     </ItemGroup>
 
 </Project>

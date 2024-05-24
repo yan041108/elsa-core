@@ -13,7 +13,7 @@ namespace Elsa.Workflows.Activities;
 /// <summary>
 /// Branch execution into multiple branches.
 /// </summary>
-[Activity("Elsa", "Control Flow", "Branch execution into multiple branches.")]
+[Activity("Elsa", "Control Flow", "Branch execution into multiple branches.", DisplayName = "Fork")]
 [PublicAPI]
 [Browsable(false)]
 public class Fork : Activity

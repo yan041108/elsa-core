@@ -12,6 +12,11 @@ using Microsoft.Data.Sqlite;
 using Proto.Persistence.Sqlite;
 using Proto.Persistence.SqlServer;
 using SQLite;
+using Microsoft.Extensions.Logging;
+using Serilog.Events;
+using Serilog;
+using Serilog.Core;
+
 
 const bool useMassTransit = true;
 const bool useProtoActor = false;
@@ -65,7 +70,7 @@ services
             })
             .UseWorkflowRuntime(runtime =>
             {
-                runtime.UseEntityFrameworkCore(ef => ef.UseSqlite(sqlServerConnectionString));
+                runtime.UseEntityFrameworkCore(ef => ef.UseSqlServer(sqlServerConnectionString));
                 
                 if (useMassTransit)
                 {
@@ -122,6 +127,56 @@ services.AddCors(cors => cors.Configure(configuration.GetSection("CorsPolicy")))
 
 // Razor Pages.
 services.AddRazorPages(options => options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()));
+
+//services.AddLogging(builder =>
+//{
+//    builder.AddConfiguration(configuration.GetSection("Logging"));
+//    //builder.AddFile(o => o.RootPath = Directory.GetCurrentDirectory());
+//    builder.AddConsole();
+//});
+
+Log.Logger = new Serilog.LoggerConfiguration()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // 排除Microsoft的日志
+            .Enrich.FromLogContext() // 注册日志上下文
+            .Enrich.WithProperty("IP", "110.110.")
+            .WriteTo.Logger(configure => configure // 输出到文件
+                .MinimumLevel.Debug()
+                .WriteTo.Console() // 输出到控制台
+                .WriteTo.File(
+                    $"logs\\Debug.txt", // 单个日志文件
+                    rollingInterval: RollingInterval.Day,
+                  restrictedToMinimumLevel: LogEventLevel.Debug,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u20}] {Message:lj}{NewLine}"
+                )
+                .WriteTo.File(
+                    $"logs\\Information.txt", // 单个日志文件
+                    rollingInterval: RollingInterval.Day,
+                  restrictedToMinimumLevel: LogEventLevel.Information,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u20}] {Message:lj}{NewLine}"
+                )
+                .WriteTo.File(
+                    $"logs\\Error.txt", // 单个日志文件
+                    rollingInterval: RollingInterval.Day,
+                  restrictedToMinimumLevel: LogEventLevel.Error,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u20}] {Message:lj}{NewLine}{Exception}"
+                )
+                 .WriteTo.File(
+                    $"logs\\Warning.txt", // 单个日志文件
+                    rollingInterval: RollingInterval.Day,
+                  restrictedToMinimumLevel: LogEventLevel.Warning,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u20}] {Message:lj}{NewLine}"
+                )
+            )
+            .CreateLogger();
+
+
+builder.Host.UseSerilog();
+
+Log.Information("Information up");
+
+//Log.Debug("Debug up");
+//Log.Warning("Warning up");
+//Log.Error("Error up");
 
 // Configure middleware pipeline.
 var app = builder.Build();

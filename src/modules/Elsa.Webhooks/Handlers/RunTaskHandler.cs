@@ -4,6 +4,7 @@ using Elsa.Webhooks.Models;
 using Elsa.Webhooks.Services;
 using Elsa.Workflows.Runtime.Notifications;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace Elsa.Webhooks.Handlers;
 
@@ -15,19 +16,23 @@ public class RunTaskHandler : INotificationHandler<RunTaskRequest>
 {
     private readonly IWebhookDispatcher _webhookDispatcher;
     private readonly ISystemClock _systemClock;
+    private readonly ILogger<RunTaskHandler> _logger;
 
     /// <summary>
     /// Constructor.
     /// </summary>
-    public RunTaskHandler(IWebhookDispatcher webhookDispatcher, ISystemClock systemClock)
+    public RunTaskHandler(IWebhookDispatcher webhookDispatcher, ISystemClock systemClock,ILogger<RunTaskHandler> logger)
     {
         _webhookDispatcher = webhookDispatcher;
         _systemClock = systemClock;
+        _logger = logger;
     }
     
     /// <inheritdoc />
     public async Task HandleAsync(RunTaskRequest notification, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("test info HandleAsync.");
+
         var activityExecutionContext = notification.ActivityExecutionContext;
         var workflowExecutionContext = activityExecutionContext.WorkflowExecutionContext;
         var workflowInstanceId = workflowExecutionContext.Id;

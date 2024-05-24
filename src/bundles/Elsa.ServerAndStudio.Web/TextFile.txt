@@ -1,0 +1,1 @@
+﻿sc create ElsaNetCoreService binpath= "D:\wwwroot\Release\ElsaServerAndStudio\Elsa.ServerAndStudio.Web.exe"
